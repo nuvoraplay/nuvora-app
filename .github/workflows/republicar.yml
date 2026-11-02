@@ -1,0 +1,25 @@
+name: Republicar versão
+on:
+  workflow_dispatch:
+    inputs:
+      versao:
+        description: "Versão (ex.: v1.0.0)"
+        required: true
+permissions:
+  contents: write
+jobs:
+  republicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publicar de novo em nome do NUVORA
+        env:
+          GH_TOKEN: ${{ github.token }}
+          V: ${{ inputs.versao }}
+        run: |
+          gh release download "$V" -p nuvora.apk
+          sha256sum nuvora.apk
+          TITULO=$(gh release view "$V" --json name --jq .name)
+          gh release view "$V" --json body --jq .body > notas.txt
+          gh release delete "$V" --cleanup-tag -y
+          gh release create "$V" nuvora.apk --title "$TITULO" --notes-file notas.txt --target main --latest
