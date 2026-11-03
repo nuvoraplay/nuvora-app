@@ -1,0 +1,49 @@
+name: Publicar versão do Windows
+# Pega o instalador do rascunho "rascunho-windows" (que não é público), publica no endereço fixo
+#   https://github.com/nuvoraplay/nuvora-app/releases/download/windows/NUVORA-Windows.exe
+# em nome do NUVORA (robô), escreve a versão em windows.txt (o aviso de versão nova do programa lê esse arquivo)
+# e apaga o rascunho.
+on:
+  workflow_dispatch:
+    inputs:
+      versao:
+        description: "Versão do instalador (ex.: 1.0.5)"
+        required: true
+permissions:
+  contents: write
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publicar o instalador em nome do NUVORA
+        env:
+          GH_TOKEN: ${{ github.token }}
+          V: ${{ inputs.versao }}
+        run: |
+          echo "$V" | grep -Eq '^[0-9]+(\.[0-9]+){1,3}$' || { echo "versão inválida: $V"; exit 1; }
+          gh release download rascunho-windows -p NUVORA-Windows.exe
+          sha256sum NUVORA-Windows.exe | tee sha256.txt
+          gh release delete windows --cleanup-tag -y || true
+          cat > notas.txt <<EOF
+          NUVORA para Windows $V
+
+          Baixe o NUVORA-Windows.exe, abra e siga o guia: https://github.com/nuvoraplay/nuvora-app#instalar-no-computador-windows
+
+          Conferência (SHA-256): $(cut -d' ' -f1 sha256.txt)
+          EOF
+          gh release create windows NUVORA-Windows.exe --title "NUVORA para Windows $V" --notes-file notas.txt --target main --latest=false
+      - name: Avisar os programas instalados (windows.txt)
+        env:
+          V: ${{ inputs.versao }}
+        run: |
+          echo "$V" > windows.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add windows.txt
+          git diff --cached --quiet || git commit -m "Windows $V"
+          git push
+      - name: Apagar o rascunho
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release delete rascunho-windows -y || true
