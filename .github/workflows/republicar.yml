@@ -21,5 +21,7 @@ jobs:
           sha256sum nuvora.apk
           TITULO=$(gh release view "$V" --json name --jq .name)
           gh release view "$V" --json body --jq .body > notas.txt
-          gh release delete "$V" --cleanup-tag -y
+          # Funciona com versão já publicada (tem etiqueta) ou com rascunho (ainda não tem).
+          gh release delete "$V" -y
+          gh api -X DELETE "repos/$GITHUB_REPOSITORY/git/refs/tags/$V" > /dev/null 2>&1 || true
           gh release create "$V" nuvora.apk --title "$TITULO" --notes-file notas.txt --target main --latest
