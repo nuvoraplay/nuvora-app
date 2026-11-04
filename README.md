@@ -12,6 +12,8 @@ https://github.com/nuvoraplay/nuvora-app/releases/latest/download/nuvora.apk
 
 https://github.com/nuvoraplay/nuvora-app/releases/download/windows/NUVORA-Windows.exe
 
+Link curto: **is.gd/nuvorapc**
+
 ## Instalar na TV (Downloader)
 1. Instale o app **Downloader** (AFTVnews) pela loja da TV.
 2. Abra o Downloader, digite o **código do NUVORA** que o seu fornecedor passar (ou o endereço acima) e toque em **Go**.
@@ -23,7 +25,7 @@ Abra o endereço acima no navegador, baixe o **nuvora.apk** e toque nele para in
 ## Instalar no computador (Windows)
 Funciona no Windows 10 e 11 (64 bits). Não precisa de senha de administrador.
 
-1. Abra o endereço do Windows acima no navegador. O arquivo **NUVORA-Windows.exe** começa a baixar.
+1. Abra **is.gd/nuvorapc** (ou o endereço do Windows acima) no navegador. O arquivo **NUVORA-Windows.exe** começa a baixar.
 2. Quando terminar, abra o arquivo (na barra de downloads do navegador ou na pasta **Downloads**).
 3. Se aparecer a tela azul **"O Windows protegeu o computador"**: clique em **Mais informações** e depois em **Executar assim mesmo**.
    (Esse aviso aparece com programas novos que o Windows ainda não conhece. O NUVORA não mexe em nada do seu computador.)
