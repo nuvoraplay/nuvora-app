@@ -25,3 +25,13 @@ jobs:
           gh release delete "$V" -y
           gh api -X DELETE "repos/$GITHUB_REPOSITORY/git/refs/tags/$V" > /dev/null 2>&1 || true
           gh release create "$V" nuvora.apk --title "$TITULO" --notes-file notas.txt --target main --latest
+      - name: Avisar os apps instalados (android.txt, lido pelo aviso de versão nova do celular e da TV)
+        env:
+          V: ${{ inputs.versao }}
+        run: |
+          echo "${V#v}" > android.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add android.txt
+          git diff --cached --quiet || git commit -m "Android ${V#v}"
+          git push
